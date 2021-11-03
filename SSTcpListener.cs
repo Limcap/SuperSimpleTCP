@@ -141,19 +141,30 @@ namespace Limcap.SSTcp {
 				System.IO.File.WriteAllText( "request.txt", message );
 				Console.WriteLine( "SSTcpListener: Dados recebidos: " + message.Replace( "\n", "\\n" ).Replace( "\r", "" ) );
 				string response = callback( message );
-				Console.WriteLine( "SSTcpListener: Dados de resposta: " + response.Replace( "\n", "\\n" ).Replace( "\r", "" ) );
+				if( response is null ) {
+					Console.WriteLine( "SSTcpListener: A requisição não gerou resposta." );
+				}
+				else {
+					Console.WriteLine( "SSTcpListener: Dados de resposta: " + response.Replace( "\n", "\\n" ).Replace( "\r", "" ) );
 
-				// Começa o envio dos dados de resposta.
-				var stepper = new ByteArrayStepper( Encoding.UTF8.GetBytes( response ) );
+					// Começa o envio dos dados de resposta.
+					var stepper = new ByteArrayStepper( Encoding.UTF8.GetBytes( response ) );
 
-				// Envia primeiro a quantidade de bytes a ser enviados
-				nwStream.Write( BitConverter.GetBytes( stepper.array.Length ), 0, 4 );
+					// Envia primeiro a quantidade de bytes a ser enviados
+					try {
+						nwStream.Write( BitConverter.GetBytes( stepper.array.Length ), 0, 4 );
 
-				// Envia os dados.
-				while (stepper.NextStep())
-					nwStream.Write( stepper.array, stepper.StepIndex, stepper.StepSize );
-
-				Console.WriteLine( "SSTcpListener: Dados de resposta enviados." );
+						// Envia os dados.
+						while (stepper.NextStep())
+							nwStream.Write( stepper.array, stepper.StepIndex, stepper.StepSize );
+						Console.WriteLine( "SSTcpListener: Dados de resposta enviados." );
+					}
+					catch (Exception ex) {
+						var n = Environment.NewLine;
+						System.IO.File.AppendAllText( "Softrep.log", n + n + n + n + ex );
+						Console.WriteLine( "SSTcpListener: Resposta não pôde ser enviada:" + n + ex );
+					}
+				}
 			}
 			client.Close();
 		}
