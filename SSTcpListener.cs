@@ -90,7 +90,7 @@ namespace Limcap.SSTcp {
 
 				// Inicializa as variáveis para recebimento.
 				byte[] buffer = new byte[ByteArrayStepper.StepMaxSize];
-				var contentParts = new List<string>();
+				var contentBytes = new List<byte>(4000);
 				bool completed = false;
 				int amountOfDataToRead = -1;
 				int totalBytesRead = 0;
@@ -113,8 +113,9 @@ namespace Limcap.SSTcp {
 						else {
 							int bytesRead = nwStream.Read( buffer, 0, ByteArrayStepper.StepMaxSize );
 							totalBytesRead += bytesRead;
-							string contentBytes = Encoding.UTF8.GetString( buffer, 0, bytesRead );
-							contentParts.Add( contentBytes );
+							//string contentBytes = Encoding.ASCII.GetString( buffer, 0, bytesRead );
+							//contentParts.Add( contentBytes );
+							contentBytes.AddRange( buffer );
 						}
 					}
 
@@ -134,9 +135,12 @@ namespace Limcap.SSTcp {
 				}
 
 				// Processa os dados recebidos.
-				string received = string.Join( "", contentParts );
-				Console.WriteLine( "SSTcpListener: Dados recebidos: " + received.Replace( "\n", "\\n" ).Replace( "\r", "" ) );
-				string response = callback( received );
+				string message = Encoding.UTF8.GetString( contentBytes.ToArray(), 0, totalBytesRead ).Trim('\0');
+
+				//string received = string.Join( "", contentBytes );
+				System.IO.File.WriteAllText( "request.txt", message );
+				Console.WriteLine( "SSTcpListener: Dados recebidos: " + message.Replace( "\n", "\\n" ).Replace( "\r", "" ) );
+				string response = callback( message );
 				Console.WriteLine( "SSTcpListener: Dados de resposta: " + response.Replace( "\n", "\\n" ).Replace( "\r", "" ) );
 
 				// Começa o envio dos dados de resposta.
