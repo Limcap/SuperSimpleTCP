@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>Limcap.SSTcp</id>
+    <version>1.0.0</version>
+    <title>Super Simple TCP</title>
+    <authors>Limcap</authors>
+    <owners>Limcap</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <license type="expression">MIT</license>
+    <projectUrl>https://github.com/Limcap/SuperSimpleTCP</projectUrl>
+    <description>Simple and easy-to-use wrappers around TcpListener and TcpClient that will make our life easier when creating custom communication protocols.</description>
+    <releaseNotes></releaseNotes>
+	<!--
+    <copyright>Copyright © 2021</copyright>
+	-->
+    <tags>tcp client listener tcpclient tcplistener connection</tags>
+    <repository type="git" url="https://github.com/Limcap/SuperSimpleTCP" />
+    <dependencies>
+      <group targetFramework=".NETStandard2.0" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="bin\Debug\netstandard2.0\Limcap.SSTcp.dll" target="lib\netstandard2.0\Limcap.SSTcp.dll" />
+    <file src="bin\Debug\netstandard2.0\Limcap.SSTcp.pdb" target="lib\netstandard2.0\Limcap.SSTcp.pdb" />
+    <file src="bin\Debug\netstandard2.0\Limcap.SSTcp.xml" target="lib\netstandard2.0\Limcap.SSTcp.xml" />
+  </files>
+</package>
