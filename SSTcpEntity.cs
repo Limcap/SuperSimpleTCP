@@ -28,6 +28,19 @@ namespace Limcap.SSTcp {
 
 
 
+		protected void Log( string message, string filename = "SSTcp.log" ) {
+			try {
+				var nl = Environment.NewLine;
+				var text = nl + DateTime.Now.ToString( "dd/MM/yyyy HH:mm:ss" ) + nl + message + nl + nl + "--------------------" + nl;
+				System.IO.File.AppendAllText( filename, text );
+			}
+			catch (Exception ex) { }
+		}
+
+
+
+
+
 
 
 

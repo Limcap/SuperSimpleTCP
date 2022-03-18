@@ -9,7 +9,7 @@ namespace Limcap.SSTcp {
 		private TcpListener listener { get; set; }
 		private Func<string, string> callback { get; set; }
 		private bool isRunning { get; set; }
-
+		private string RequestLogFilepath => port + "-request.txt";
 
 
 
@@ -138,7 +138,9 @@ namespace Limcap.SSTcp {
 				string message = Encoding.UTF8.GetString( contentBytes.ToArray(), 0, totalBytesRead ).Trim('\0');
 
 				//string received = string.Join( "", contentBytes );
-				System.IO.File.WriteAllText( "request.txt", message );
+				//System.IO.File.WriteAllText( port+"-request.txt", message );
+				Log( message, RequestLogFilepath );
+
 				Console.WriteLine( "SSTcpListener: Dados recebidos: " + message.Replace( "\n", "\\n" ).Replace( "\r", "" ) );
 				string response = callback( message );
 				if( response is null ) {
@@ -161,13 +163,22 @@ namespace Limcap.SSTcp {
 					}
 					catch (Exception ex) {
 						var n = Environment.NewLine;
-						System.IO.File.AppendAllText( "Softrep.log", n + n + n + n + ex );
+						System.IO.File.AppendAllText( "SSTcp.log", n + n + n + n + ex );
 						Console.WriteLine( "SSTcpListener: Resposta não pôde ser enviada:" + n + ex );
 					}
 				}
 			}
 			client.Close();
 		}
+
+		//private void SaveRequest( string requestData ) {
+		//	try {
+		//		var nl = Environment.NewLine;
+		//		var text = nl + DateTime.Now.ToString( "dd/MM/yyyy HH:mm:ss" ) + nl + requestData + nl + nl + "--------------------" + nl;
+		//		System.IO.File.AppendAllText( port+"-request.txt", text );
+		//	}
+		//	catch { };
+		//}
 
 
 
